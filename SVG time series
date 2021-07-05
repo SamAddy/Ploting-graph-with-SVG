@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SVG Time Series</title>
+
+
+  <style>
+    body
+    {
+      background-color: #d3e0ea;
+      align-items: center;
+    }
+
+    .caption
+    {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div class="inputs">
+    <input type="file" id="csvFileInput" onchange="handleFiles(this.files)" accept=".csv">
+  </div>
+
+  <div class="caption">
+    <h1>Confirmed COVID-19 Cases</h1>
+    <span> <strong>(cases per million people)</strong> </span>
+  </div>
+
+
+
+
+  <svg id="svg" version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="graph" aria-labelledby="title" role="img" width="1500" height="1000" >
+    <rect x="90" y="75" width="1092" height="555" style="fill: white;" />
+    <g class="grid x-grid" id="xGrid">
+      <line x1="90" y1="75" x2="90" y2="630" style="stroke:black;stroke-width:1.5"></line>
+    </g>
+    <g class="grid y-grid" id="yGrid">
+      <line x1="90" x2="1182" y1="630" y2="630" style="stroke:black;stroke-width:1.5"></line>
+    </g>
+    <!--graph internal lines-->
+    <g>
+      <line x1="80" x2="1182" y1="115" y2="115" style="stroke:#d8e3e7;stroke-width:1"></line>
+      <line x1="80" x2="1182" y1="215" y2="215" style="stroke:#d8e3e7;stroke-width:1"></line>
+      <line x1="80" x2="1182" y1="315" y2="315" style="stroke:#d8e3e7;stroke-width:1"></line>
+      <line x1="80" x2="1182" y1="415" y2="415" style="stroke:#d8e3e7;stroke-width:1"></line>
+      <line x1="80" x2="1182" y1="515" y2="515" style="stroke:#d8e3e7;stroke-width:1"></line>
+      <line x1="80" x2="1182" y1="615" y2="615" style="stroke:#d8e3e7;stroke-width:1"></line>
+    </g>
+
+    <!--hardcoded test plot for countries-->
+     <g>
+
+     </g>
+
+
+    <!-- Date plotting on x axis-->
+    <g class="labels x-labels">
+      <text x="85" y="665">3/14/2020</text>
+      <text x="231" y="665">4/25/2020</text>
+      <text x="377" y="665">5/13/2020</text>
+      <text x="523" y="665">5/29/2020</text>
+      <text x="669" y="665">6/19/2020</text>
+      <text x="815" y="665">3/5/2021</text>
+      <!--
+      <text x="961" y="700">2021-03-20</text>
+      <text x="1107" y="700">2021-04-07</text>-->
+      <text x="520" y="700" class="label-title" style="font-size: 25px;">date</text>
+    </g>
+
+    <!--short dashes on x- axis-->
+    <g>
+      <line x1="120" x2="120" y1="630" y2="645" style="stroke:black;stroke-width:1"></line>
+      <line x1="266" x2="266" y1="630" y2="645" style="stroke:black;stroke-width:1"></line>
+      <line x1="412" x2="412" y1="630" y2="645" style="stroke:black;stroke-width:1"></line>
+      <line x1="558" x2="558" y1="630" y2="645" style="stroke:black;stroke-width:1"></line>
+      <line x1="704" x2="704" y1="630" y2="645" style="stroke:black;stroke-width:1"></line>
+      <line x1="850" x2="850" y1="630" y2="645" style="stroke:black;stroke-width:1"></line>
+    </g>
+
+
+    <!-- y axis plottings -->
+    <g class="labels y-labels">
+      <text x="50" y="115" transform="rotate(270 70,115)">1000</text>
+      <text x="50" y="215" transform="rotate(270 70,215)">800</text>
+      <text x="50" y="315" transform="rotate(270 70,315)">600</text>
+      <text x="50" y="415" transform="rotate(270 70,415)">400</text>
+      <text x="50" y="515" transform="rotate(270 70,515)">200</text>
+      <text x="65" y="615" transform="rotate(270 70,615)">0</text>
+      <!-- <text x="30" y="280" class="label-title">Price</text> -->
+    </g>
+
+    <!--short dashes on y axis-->
+    <g>
+      <line x1="80" x2="90" y1="115" y2="115" style="stroke:black;stroke-width:1"></line>
+      <line x1="80" x2="90" y1="215" y2="215" style="stroke:black;stroke-width:1"></line>
+      <line x1="80" x2="90" y1="315" y2="315" style="stroke:black;stroke-width:1"></line>
+      <line x1="80" x2="90" y1="415" y2="415" style="stroke:black;stroke-width:1"></line>
+      <line x1="80" x2="90" y1="515" y2="515" style="stroke:black;stroke-width:1"></line>
+      <line x1="80" x2="90" y1="615" y2="615" style="stroke:black;stroke-width:1"></line>
+    </g>
+
+    <rect x="90" y="790" width="300" height="150" style="fill: white; stroke:#383e56; stroke-width:1" />
+    <g>
+      <text x="205" y="860">Brazil cases. </text>
+      <text x="205" y="890">France cases. </text>
+      <line x1="115" x2="195" y1="855" y2="855" style="stroke:green; stroke-width:2"></line>
+      <line x1="115" x2="195" y1="885" y2="885" style="stroke:blue; stroke-width:2"></line>
+    </g>
+  </svg>
+
+  <script>
+    const xmlns = "http://www.w3.org/2000/svg";
+
+    let _brazil;
+    let _france;
+    let brazil = [];
+    let france = [];
+    const xAxis = [120, 266, 412, 558, 704, 850];
+
+    function create(x1, x2, y1, y2, color) {
+
+      var elem = document.createElementNS(xmlns, "line");
+      elem.setAttributeNS(null, "x1", x1);
+      elem.setAttributeNS(null, "y1", y1);
+      elem.setAttributeNS(null, "x2", x2);
+      elem.setAttributeNS(null, "y2", y2);
+      elem.setAttributeNS(null, 'stroke', color);
+      elem.setAttributeNS(null, 'stroke-width', 3);
+
+      document.getElementById('svg').appendChild(elem);
+
+
+    }
+
+
+    function handleFiles(files) {
+      // Check for the various File API support.
+      if (window.FileReader) {
+        // FileReader are supported.
+        getAsText(files[0]);
+      } else {
+        alert('FileReader are not supported in this browser.');
+      }
+    }
+
+    function getAsText(fileToRead) {
+      var reader = new FileReader();
+      // Read file into memory as UTF-8
+      reader.readAsText(fileToRead);
+      // Handle errors load
+      reader.onload = loadHandler;
+      reader.onerror = errorHandler;
+    }
+
+    function loadHandler(event) {
+      var csv = event.target.result;
+      processData(csv);
+    }
+
+    function processData(csv) {
+      var allTextLines = csv.split(/\r\n|\n/);
+      var lines = [];
+      let brazilPerMill = [];
+      let francePerMill = [];
+
+      for (var i = 0; i < allTextLines.length; i++) {
+        var data = allTextLines[i].split(';');
+        var tarr = [];
+        for (var j = 0; j < data.length; j++) {
+          tarr.push(data[j]);
+        }
+        lines.push(tarr);
+      }
+      ////Brazil ////
+      for (let i = 10262; i < 80098; i++) {
+        if (lines[i][0] === "BRA" && lines[i][3] === "2020-03-14") {
+          brazilPerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "BRA" && lines[i][3] === "2020-04-25") {
+          brazilPerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "BRA" && lines[i][3] === "2020-05-13") {
+          brazilPerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "BRA" && lines[i][3] === "2020-05-29") {
+          brazilPerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "BRA" && lines[i][3] === "2020-06-19") {
+          brazilPerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "BRA" && lines[i][3] === "2021-03-05") {
+          brazilPerMill.push(parseFloat(lines[i][5]));
+        }
+
+      }
+
+      /// For France //////
+
+      for (let i = 26159; i < 80098; i++) {
+        if (lines[i][0] === "FRA" && lines[i][3] === "2020-03-14") {
+          francePerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "FRA" && lines[i][3] === "2020-04-25") {
+          francePerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "FRA" && lines[i][3] === "2020-05-13") {
+          francePerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "FRA" && lines[i][3] === "2020-05-29") {
+          francePerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "FRA" && lines[i][3] === "2020-06-19") {
+          francePerMill.push(parseFloat(lines[i][5]));
+        }
+        else if (lines[i][0] === "FRA" && lines[i][3] === "2021-03-05") {
+          francePerMill.push(parseFloat(lines[i][5]));
+        }
+
+      }
+
+
+
+      for (let j = 0; j < 6; j++) {
+        _brazil = 615 - (brazilPerMill[j] * 500)/1000;
+        brazil.push(_brazil);
+        _france = 615 - (francePerMill[j] * 500)/1000;
+        france.push(_france);
+
+      }
+
+
+      for (let i = 0; i < 6; i++) {
+        if(i < 5) {
+          create(xAxis[i], xAxis[i + 1], brazil[i], brazil[i + 1], "green");
+          create(xAxis[i], xAxis[i + 1], france[i], france[i + 1], "blue");
+        }
+
+      }
+
+
+    }
+
+    //
+
+
+
+    function errorHandler(evt) {
+      if (evt.target.error.name == "NotReadableError") {
+        alert("Cannot read file !");
+      }
+    }
+  </script>
+
+
+</body>
+
+</html>
